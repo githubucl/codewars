@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    CodeWar
+</body>
+<script>
+
+    function whoIsWinner(piecesPositionList) {
+        //return "Red", "Yellow" or "Draw"
+        const columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+        const rows = [0, 1, 2, 3, 4, 5, 6]
+        const column = new Map()
+        columns.forEach((group) => {
+            column.set(group, [])
+        })
+        piecesPositionList.forEach((step) => {
+            const [group, color] = step.split('_')
+            column.set(group, [...column.get(group), color])
+        })
+        const vertical = () => {
+            let winner
+            for (let value of column.values()) {
+                let count = 0
+                let c
+                value.forEach((color) => {
+
+                    if (c !== color) {
+                        c = color
+                        count = 0
+                    }
+                    else {
+                        count += 1
+                        if (count === 3) {
+                            winner = c
+                            return winner
+
+                        }
+                    }
+                })
+            }
+            return winner
+        }
+
+        const horizontal = () => {
+            let winner
+            rows.forEach((row) => {
+                let c
+                let count = 0
+                for (let value of column.values()) {
+                    if (value[row]) {
+                        if (c !== value[row]) {
+                            c = value[row]
+                            count = 0
+                        }
+                        else {
+                            count += 1
+                            if (count === 3) {
+                                winner = c
+                                return winner
+                            }
+                        }
+                    }
+                }
+
+            })
+            return winner
+        }
+
+        const bias = () => {
+            let winner
+            let c
+            let count = 0
+            for (let [key, value] of column.entries()) {
+                value.forEach((color, i) => {
+
+                    c = color
+                    let next =i
+                    let index = columns.indexOf(key)
+                    while (next<7){
+                        next+=1
+                         index+= 1
+                        if(column.get(columns[index])){
+                            if (column.get(columns[index])[next] !== c) {
+                                c = column.get(columns[index])[next]
+                                count = 0
+                            }
+                            else {
+                                count += 1
+                                if (count === 3) {
+                                    winner = c
+                                    return winner
+                                }
+                            }
+
+                        }
+
+                       
+                    }
+
+                })
+
+            }
+            return winner
+        }
+// return column.get(columns[0])[0]
+        return bias()
+    }
+
+
+
+    console.log(whoIsWinner(["A_Yellow",
+        "B_Red",
+        "B_Yellow",
+        "C_Red",
+        "G_Yellow",
+        "C_Red",
+        "C_Yellow",
+        "C_Yellow",
+        "D_Red",
+        "G_Yellow",
+        "D_Red",
+        "G_Yellow",
+        "D_Red",
+        "F_Yellow",
+        "E_Red",
+        "D_Yellow"]));
+
+</script>
+
+</html>
